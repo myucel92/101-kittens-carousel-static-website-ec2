@@ -1,11 +1,17 @@
 AWSTemplateFormatVersion: 2010-09-09
 Description: |
   Kittens Carousel is a static website application deployed with Apache Web Server on AWS Elastic Compute Cloud (EC2) Instance using AWS Cloudformation Service.
+# Use public Systems Manager Parameter
+Parameters:
+  LatestAmiId:
+    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
+    Default: '/aws/service/ami-amazon-linux-latest/amazon2023-ami-hvm-x86_64-gp2' # Latest, up-to-date and free 'ami' 
+
 Resources:
-  myucelinstanceSW:
+  myucelinstanceWS:
     Type: AWS::EC2::Instance
     Properties:
-      ImageId: ami-051f7e7f6c2f40dc1
+      ImageId: !Ref LatestAmiId  # we give ami reference
       InstanceType: t2.micro
       KeyName: firstkey # Use your own key pair without ".pem"
       SecurityGroups:
@@ -17,6 +23,7 @@ Resources:
           Value: Dev
       UserData:
         Fn::Base64: |
+          #! /bin/bash
           yum update -y 
           yum install httpd -y
           FOLDER="https://raw.githubusercontent.com/myucel92/101-kittens-carousel-static-website-ec2/main/static-web"
@@ -41,3 +48,9 @@ Resources:
           FromPort: 80
           ToPort: 80
           CidrIp: 0.0.0.0/0
+  Outputs:
+  WebsiteURL:
+    Value: !Sub 
+      - http://${PublicAddress}
+      - PublicAddress: !GetAtt myucelinstanceWS.PublicDnsName
+    Description: Kittens Carousel Application URL
