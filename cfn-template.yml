@@ -4,18 +4,18 @@ Description: |
 # Use public Systems Manager Parameter
 Parameters:
   LatestAmiId:
-    Type: 'AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>'
-    Default: '/aws/service/ami-amazon-linux-latest/amazon2023-ami-hvm-x86_64-gp2' # Latest, up-to-date and free 'ami' 
+    Type: "AWS::SSM::Parameter::Value<AWS::EC2::Image::Id>"
+    Default: "/aws/service/ami-amazon-linux-latest/al2023-ami-minimal-kernel-default-x86_64" # Latest, up-to-date and free 'ami'
 
 Resources:
   myucelinstanceWS:
     Type: AWS::EC2::Instance
     Properties:
-      ImageId: !Ref LatestAmiId  # we give ami reference
+      ImageId: !Ref LatestAmiId # we give ami reference
       InstanceType: t2.micro
       KeyName: firstkey # Use your own key pair without ".pem"
       SecurityGroups:
-        - !Ref MyucelinstanceSG
+        - !Ref myucelinstanceSG
       Tags:
         - Key: Name
           Value: myucelcfninstance
@@ -24,16 +24,18 @@ Resources:
       UserData:
         Fn::Base64: |
           #! /bin/bash
-          yum update -y 
-          yum install httpd -y
-          FOLDER="https://raw.githubusercontent.com/myucel92/101-kittens-carousel-static-website-ec2/main/static-web"
+          sudo yum update -y 
+          sudo yum install httpd -y
           cd /var/www/html
-          wget $FOLDER/index.html
-          wget $FOLDER/cat0.jpg
-          wget $FOLDER/cat1.jpg
-          wget $FOLDER/cat2.jpg
-          systemctl start httpd
-          systemctl enable httpd
+          sudo chmod -R 777 /var/www/html
+          sudo rm index.html
+          FOLDER="https://raw.githubusercontent.com/myucel92/101-kittens-carousel-static-website-ec2/main/static-web"
+          sudo wget $FOLDER/index.html
+          sudo wget $FOLDER/cat0.jpg
+          sudo wget $FOLDER/cat1.jpg
+          sudo wget $FOLDER/cat2.jpg
+          sudo systemctl start httpd
+          sudo systemctl enable httpd
 
   myucelinstanceSG:
     Type: AWS::EC2::SecurityGroup
@@ -48,9 +50,3 @@ Resources:
           FromPort: 80
           ToPort: 80
           CidrIp: 0.0.0.0/0
-  Outputs:
-    WebsiteURL:
-      Value: !Sub 
-        - http://${PublicAddress}
-        - PublicAddress: !GetAtt myucelinstanceWS.PublicDnsName
-      Description: Kittens Carousel Application URL
