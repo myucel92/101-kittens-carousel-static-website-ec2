@@ -22,7 +22,7 @@ Resources:
         - Key: Enviroment
           Value: Dev
       UserData:
-        Fn::Base64: !Sub |
+        Fn::Base64: |
           #! /bin/bash
           sudo yum update -y 
           sudo yum install httpd -y
