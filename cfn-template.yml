@@ -22,7 +22,7 @@ Resources:
         - Key: Enviroment
           Value: Dev
       UserData:
-        Fn::Base64: |
+        Fn::Base64: !Sub |
           #! /bin/bash
           sudo yum update -y 
           sudo yum install httpd -y
@@ -34,6 +34,7 @@ Resources:
           sudo wget $FOLDER/cat0.jpg
           sudo wget $FOLDER/cat1.jpg
           sudo wget $FOLDER/cat2.jpg
+          sudo wget $FOLDER/clarusway-logo-classic.jpg
           sudo systemctl start httpd
           sudo systemctl enable httpd
 
