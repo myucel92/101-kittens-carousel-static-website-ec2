@@ -18,9 +18,7 @@ Resources:
         - !Ref myucelinstanceSG
       Tags:
         - Key: Name
-          Value: myucelcfninstance
-        - Key: Enviroment
-          Value: Dev
+          Value: myucel-kittens-carousel-project
       UserData:
         Fn::Base64: |
           #! /bin/bash
