@@ -49,8 +49,8 @@ Resources:
           ToPort: 80
           CidrIp: 0.0.0.0/0
   Outputs:
-  WebsiteURL:
-    Value: !Sub 
-      - http://${PublicAddress}
-      - PublicAddress: !GetAtt myucelinstanceWS.PublicDnsName
-    Description: Kittens Carousel Application URL
+    WebsiteURL:
+      Value: !Sub 
+        - http://${PublicAddress}
+        - PublicAddress: !GetAtt myucelinstanceWS.PublicDnsName
+      Description: Kittens Carousel Application URL
