@@ -22,18 +22,16 @@ Resources:
       UserData:
         Fn::Base64: |
           #! /bin/bash
-          sudo yum update -y 
-          sudo yum install httpd -y
-          cd /var/www/html
-          sudo chmod -R 777 /var/www/html
-          sudo rm index.html
+          yum update -y 
+          yum install httpd -y
           FOLDER="https://raw.githubusercontent.com/myucel92/101-kittens-carousel-static-website-ec2/main/static-web"
-          sudo wget $FOLDER/index.html
-          sudo wget $FOLDER/cat0.jpg
-          sudo wget $FOLDER/cat1.jpg
-          sudo wget $FOLDER/cat2.jpg
-          sudo systemctl start httpd
-          sudo systemctl enable httpd
+          cd /var/www/html
+          wget ${FOLDER}/index.html
+          wget ${FOLDER}/cat0.jpg
+          wget ${FOLDER}/cat1.jpg
+          wget ${FOLDER}/cat2.jpg
+          systemctl start httpd
+          systemctl enable httpd
 
   myucelinstanceSG:
     Type: AWS::EC2::SecurityGroup
